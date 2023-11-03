@@ -1,0 +1,19 @@
+:root {
+    --page-padding: 15px;
+}
+
+.page {
+    min-height: calc(100vh - 2 * var(--page-padding));
+    padding: var(--page-padding);
+}
+
+.content {
+    width: 100%;
+}
+
+@media (min-width: 768px) {
+    .content {
+        width: calc(768px - 2 * var(--page-padding));
+        margin: auto;
+    }
+}
