@@ -1,4 +1,4 @@
-package ru.lct.itmoteam.taskservice.controllers;
+package ru.lct.itmoteam.taskservice.controller;
 
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
