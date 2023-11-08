@@ -7,7 +7,7 @@ public class Account {
     private String login;
 
     public static Account toModel(AccountEntity account) {
-        if(account == null) {
+        if (account == null) {
             return null;
         }
         Account model = new Account();

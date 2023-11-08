@@ -10,7 +10,7 @@ public class AccountEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
-    @Column(name = "owner_id", nullable = true)
+    @Column(name = "owner_id")
     private Long owner_id;
     @Column(name = "login", nullable = false)
     private String login;
@@ -23,10 +23,6 @@ public class AccountEntity {
     public AccountEntity() {
     }
 
-    public enum Role {
-        EMPLOYEE, MANAGER
-    }
-
     public Long getId() {
         return id;
     }
@@ -35,11 +31,11 @@ public class AccountEntity {
         this.id = id;
     }
 
-    public Long getOwner_id() {
+    public Long getOwnerId() {
         return owner_id;
     }
 
-    public void setOwner_id(Long owner_id) {
+    public void setOwnerId(Long owner_id) {
         this.owner_id = owner_id;
     }
 
