@@ -7,8 +7,8 @@ import ru.lct.itmoteam.taskservice.exception.BadInputDataException;
 import ru.lct.itmoteam.taskservice.exception.EntityNotFoundException;
 import ru.lct.itmoteam.taskservice.repository.PersonRepo;
 
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.StreamSupport;
 
 @Service
 public class PersonService {
@@ -28,35 +28,30 @@ public class PersonService {
         throw new EntityNotFoundException("Пользователь с таким id не найден");
     }
 
-    public boolean registerPerson(Person person) throws BadInputDataException {
-        if (person.getFirstName() == null || Objects.equals(person.getFirstName(), ""))
+    public List<Person> getAllPersons() {
+        Iterable<PersonEntity> source = personRepo.findAll();
+        return StreamSupport.stream(source.spliterator(), false)
+                .map(Person::toModel)
+                .toList();
+    }
+
+    public PersonEntity addPerson(PersonEntity personEntity) throws BadInputDataException {
+        if (personEntity.getFirstName() == null || Objects.equals(personEntity.getFirstName(), ""))
             throw new BadInputDataException("Имя не может быть пустым.");
 
-        if (person.getSecondName() == null || Objects.equals(person.getSecondName(), ""))
+        if (personEntity.getSecondName() == null || Objects.equals(personEntity.getSecondName(), ""))
             throw new BadInputDataException("Фамилия не может быть пустой.");
 
-        if (person.getMiddleName() == null || Objects.equals(person.getMiddleName(), ""))
+        if (personEntity.getMiddleName() == null || Objects.equals(personEntity.getMiddleName(), ""))
             throw new BadInputDataException("Отчество не может быть пустым.");
 
-        if (person.getLocation() == null)
-            throw new BadInputDataException("Невозможно добавить человека, не указав id офиса.");
-
-        if (locationService.getLocationModelById(person.getLocation()) == null)
-            throw new BadInputDataException("Офиса с таким id не существует");
-
-        // TODO: CHECK person.getGrade() IN Grade
-
-
         try {
-            PersonEntity personEntity = new PersonEntity();
-            personEntity.setFirstName(person.getFirstName());
-            personEntity.setSecondName(person.getSecondName());
-            personEntity.setMiddleName(person.getMiddleName());
-            personEntity.setLocation(locationService.getLocationEntityById(person.getLocation()));
-            personEntity.setGrade(person.getGrade());
-            personEntity.setActive(true);
-            personRepo.save(personEntity);
-            return true;
+            PersonEntity entity = new PersonEntity();
+            entity.setFirstName(personEntity.getFirstName());
+            entity.setSecondName(personEntity.getSecondName());
+            entity.setMiddleName(personEntity.getMiddleName());
+            entity.setRole(personEntity.getRole());
+            return personRepo.save(entity);
         } catch (Exception e) {
             throw new BadInputDataException("Произошла ошибка во время добавления человека.");
         }

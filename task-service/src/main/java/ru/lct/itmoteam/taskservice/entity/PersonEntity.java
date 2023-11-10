@@ -1,6 +1,7 @@
 package ru.lct.itmoteam.taskservice.entity;
 
 import jakarta.persistence.*;
+import ru.lct.itmoteam.taskservice.DTO.Person;
 
 @Entity
 @Table(name = "person")
@@ -15,15 +16,24 @@ public class PersonEntity {
     private String firstName;
     @Column(name = "middle_name", nullable = false)
     private String middleName;
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "location_id")
-    private LocationEntity locationEntity;
-    @Column(name = "grade")
-    private Grade grade;
-    @Column(name = "is_active", nullable = false)
-    private boolean isActive;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false)
+    private Role role;
 
     public PersonEntity() {
+    }
+
+    public static PersonEntity toEntity(Person person) {
+        PersonEntity entity = new PersonEntity();
+        try {
+            entity.setRole(Role.valueOf(person.getRole()));
+        } catch (Exception e) {
+            entity.setRole(null);
+        }
+        entity.setFirstName(person.getFirstName());
+        entity.setSecondName(person.getSecondName());
+        entity.setMiddleName(person.getMiddleName());
+        return entity;
     }
 
     public Long getId() {
@@ -58,27 +68,11 @@ public class PersonEntity {
         this.middleName = middleName;
     }
 
-    public LocationEntity getLocation() {
-        return locationEntity;
+    public Role getRole() {
+        return role;
     }
 
-    public void setLocation(LocationEntity location_id) {
-        this.locationEntity = location_id;
-    }
-
-    public Grade getGrade() {
-        return grade;
-    }
-
-    public void setGrade(Grade grade) {
-        this.grade = grade;
-    }
-
-    public boolean isActive() {
-        return isActive;
-    }
-
-    public void setActive(boolean active) {
-        isActive = active;
+    public void setRole(Role role) {
+        this.role = role;
     }
 }

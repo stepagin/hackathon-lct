@@ -1,6 +1,5 @@
 package ru.lct.itmoteam.taskservice.DTO;
 
-import ru.lct.itmoteam.taskservice.entity.Grade;
 import ru.lct.itmoteam.taskservice.entity.PersonEntity;
 
 public class Person {
@@ -8,19 +7,19 @@ public class Person {
     private String secondName;
     private String firstName;
     private String middleName;
-    private Long location;
-    private Grade grade;
+    private String role;
 
 
-    public static Person toModel(PersonEntity personEntity) {
-        Person person = new Person();
-        person.setId(personEntity.getId());
-        person.setFirstName(personEntity.getFirstName());
-        person.setSecondName(personEntity.getSecondName());
-        person.setMiddleName(personEntity.getMiddleName());
-        person.setLocation(personEntity.getLocation().getId());
-        person.setGrade(personEntity.getGrade());
-        return person;
+    public static Person toModel(PersonEntity person) {
+        if (person == null)
+            return null;
+        Person model = new Person();
+        model.setId(person.getId());
+        model.setFirstName(person.getFirstName());
+        model.setSecondName(person.getSecondName());
+        model.setMiddleName(person.getMiddleName());
+        model.setRole(person.getRole().toString());
+        return model;
     }
 
     public Person() {
@@ -58,19 +57,11 @@ public class Person {
         this.middleName = middleName;
     }
 
-    public Long getLocation() {
-        return location;
+    public String getRole() {
+        return role;
     }
 
-    public void setLocation(Long location) {
-        this.location = location;
-    }
-
-    public Grade getGrade() {
-        return grade;
-    }
-
-    public void setGrade(Grade grade) {
-        this.grade = grade;
+    public void setRole(String role) {
+        this.role = role;
     }
 }

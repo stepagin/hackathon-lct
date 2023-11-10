@@ -6,5 +6,6 @@ import ru.lct.itmoteam.taskservice.entity.AccountEntity;
 
 @Repository
 public interface AccountRepo extends CrudRepository<AccountEntity, Long> {
+    boolean existsAccountEntityByLogin(String login);
     AccountEntity findByLogin(String login);
 }

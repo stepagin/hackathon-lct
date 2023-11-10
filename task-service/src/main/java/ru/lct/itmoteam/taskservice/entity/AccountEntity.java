@@ -1,6 +1,7 @@
 package ru.lct.itmoteam.taskservice.entity;
 
 import jakarta.persistence.*;
+import ru.lct.itmoteam.taskservice.DTO.AccountAndPersonData;
 
 
 @Entity
@@ -10,18 +11,23 @@ public class AccountEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
-    @Column(name = "owner_id")
-    private Long owner_id;
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "person_id", nullable = false)
+    private PersonEntity person;
     @Column(name = "login", nullable = false)
     private String login;
     @Column(name = "password", nullable = false)
     private String password;
-    @Enumerated(EnumType.STRING)
-    @Column(name = "role", nullable = false)
-    private Role role;
 
     public AccountEntity() {
     }
+
+    public AccountEntity(AccountAndPersonData data, PersonEntity person) {
+        this.login = data.getLogin();
+        this.password = data.getPassword();
+        this.person = person;
+    }
+
 
     public Long getId() {
         return id;
@@ -31,12 +37,12 @@ public class AccountEntity {
         this.id = id;
     }
 
-    public Long getOwnerId() {
-        return owner_id;
+    public PersonEntity getPerson() {
+        return person;
     }
 
-    public void setOwnerId(Long owner_id) {
-        this.owner_id = owner_id;
+    public void setPerson(PersonEntity person) {
+        this.person = person;
     }
 
     public String getLogin() {
@@ -53,22 +59,5 @@ public class AccountEntity {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
-    @Override
-    public String toString() {
-        return "AccountEntity{" +
-                "id=" + id +
-                ", login='" + login + '\'' +
-                ", password='" + password + '\'' +
-                '}';
     }
 }

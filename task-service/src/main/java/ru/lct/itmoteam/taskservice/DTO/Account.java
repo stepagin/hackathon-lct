@@ -5,6 +5,7 @@ import ru.lct.itmoteam.taskservice.entity.AccountEntity;
 public class Account {
     private Long id;
     private String login;
+    private String role;
 
     public static Account toModel(AccountEntity account) {
         if (account == null) {
@@ -13,6 +14,7 @@ public class Account {
         Account model = new Account();
         model.setId(account.getId());
         model.setLogin(account.getLogin());
+        model.setRole(account.getPerson().getRole().toString());
         return model;
     }
 
@@ -33,5 +35,13 @@ public class Account {
 
     public void setLogin(String login) {
         this.login = login;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }

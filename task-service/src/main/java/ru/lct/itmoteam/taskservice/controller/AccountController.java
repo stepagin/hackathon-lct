@@ -3,10 +3,6 @@ package ru.lct.itmoteam.taskservice.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.lct.itmoteam.taskservice.entity.AccountEntity;
-import ru.lct.itmoteam.taskservice.exception.PasswordIncorrectException;
-import ru.lct.itmoteam.taskservice.exception.BadInputDataException;
-import ru.lct.itmoteam.taskservice.exception.EntityDoesNotExistException;
 import ru.lct.itmoteam.taskservice.exception.EntityNotFoundException;
 import ru.lct.itmoteam.taskservice.service.AccountService;
 
@@ -21,38 +17,20 @@ public class AccountController {
         this.accountService = accountService;
     }
 
-    @PostMapping("/register")
-    public ResponseEntity registration(@RequestBody AccountEntity user) {
-        try {
-            accountService.registration(user);
-            return ResponseEntity.ok(true);
-        } catch (BadInputDataException e) {
-            return ResponseEntity.ok(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Произошла ошибка во время регистрации.");
-        }
-    }
 
-    @PostMapping("/login")
-    public ResponseEntity login(@RequestBody AccountEntity user) {
-        try {
-            accountService.login(user);
-            return ResponseEntity.ok(true);
-        } catch (PasswordIncorrectException | EntityDoesNotExistException e) {
-            return ResponseEntity.ok("Введён неверный логин или пароль.");
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Произошла ошибка во время входа в аккаунт.");
-        }
-    }
 
-    @GetMapping("/person")
+    @GetMapping("/account")
     public ResponseEntity getUserById(@RequestParam Long id) {
         try {
-            return ResponseEntity.ok(accountService.getUserById(id));
+            return ResponseEntity.ok(accountService.getAccountById(id));
         } catch (EntityNotFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Не удалось получить данные о пользователе.");
         }
     }
+
+    // TODO: /cabinet
+    // TODO: /cabinet/tasks
+    // TODO: /cabinet/tasks/route?id=POINT_ID
 }
