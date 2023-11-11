@@ -1,0 +1,35 @@
+.group {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: .5rem;
+}
+
+.group label {
+    font-weight: 700;
+    transition: color 100ms linear;
+}
+
+.group input {
+    font-size: 1.125rem;
+    padding: 1.125rem;
+    border-radius: .25rem;
+    background: var(--default-white);
+    border: 1px solid var(--default-gray);
+
+    transition: all 200ms linear;
+}
+
+.group input:focus {
+    background-color: var(--default-light-gray);
+}
+
+label.error {
+    color: var(--default-red);
+}
+
+input.error {
+    border-color: var(--default-red);
+    color: var(--default-red);
+}

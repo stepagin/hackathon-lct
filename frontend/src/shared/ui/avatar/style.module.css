@@ -1,0 +1,17 @@
+:root {
+    --avatar-blue: #016BDC;
+}
+
+.avatar {
+    user-select: none;
+    border-radius: 50%;
+    width: 2rem;
+    height: 2rem;
+    line-height: 2rem;
+    text-align: center;
+    color: var(--default-white);
+    font-weight: 600;
+    font-size: 0.625rem;
+    background-color: var(--avatar-blue);
+}
+

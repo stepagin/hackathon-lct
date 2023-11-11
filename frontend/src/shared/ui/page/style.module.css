@@ -1,0 +1,14 @@
+:root {
+    --page-padding-v: 1rem;
+    --page-padding-h: 1rem;
+}
+
+.page {
+    min-height: 100vh;
+    
+}
+
+.content {
+    width: calc(100% - 2 * var(--page-padding-h));
+    padding: var(--page-padding-v) var(--page-padding-h);
+}

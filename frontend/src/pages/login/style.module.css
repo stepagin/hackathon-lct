@@ -1,0 +1,11 @@
+.login {
+    background: var(--brand-gradient);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.login article {
+    max-width: 542px;
+    margin: auto;
+}
