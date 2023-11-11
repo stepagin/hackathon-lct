@@ -10,7 +10,11 @@ import ru.lct.itmoteam.taskservice.repository.TaskRepo;
 import ru.lct.itmoteam.taskservice.repository.TaskTypeRepo;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.time.ZoneId;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.StreamSupport;
 
 @Service
@@ -114,6 +118,13 @@ public class TaskService {
                 .toList();
     }
 
+    public List<Task> getAllFinishedTasksByEmployeeId(Long id) {
+        List<TaskEntity> source = taskRepo.findAllFinishedTasksByEmployee(id);
+        return source.stream()
+                .map(Task::toModel)
+                .toList();
+    }
+
     public boolean existsTaskById(Long id) {
         return taskRepo.existsById(id);
     }
@@ -167,5 +178,29 @@ public class TaskService {
             throw new BadInputDataException("Не найдена задача с таким id.");
         taskRepo.updateAssignment(TaskDistributionStatus.NOT_DISTRIBUTED, null, null, taskId);
         return getTaskById(taskId);
+    }
+
+    public void finishTask(Long id) throws BadInputDataException {
+        if (!existsTaskById(id))
+            throw new BadInputDataException("Не существует задачи с таким id.");
+        TaskEntity task = getTaskEntityById(id);
+        if (task.isCompleted())
+            throw new BadInputDataException("Задача уже выполнена.");
+        if (task.getEmployee() == null && task.getStatus() == TaskDistributionStatus.NOT_DISTRIBUTED)
+            throw new BadInputDataException("Эта задачи не может быть помечена выполненой, так как не распределена.");
+        taskRepo.updateCompletedAndCompletionDatetimeById(LocalDateTime.now(), id);
+    }
+
+    public long getTasksCountByEmployeeAndGrade(Long id, Grade grade) {
+        return taskRepo.countByEmployee_IdAndType_GradeAndCompletedTrue(id, grade);
+    }
+
+    public long getTasksCountByEmployeeAndGradeAndDates(Long id, Grade grade, Date from, Date to) {
+        return taskRepo.countByEmployee_IdAndType_GradeAndCompletionDatetimeBetween(
+                id,
+                grade,
+                LocalDateTime.ofInstant(from.toInstant(), ZoneId.systemDefault()),
+                LocalDateTime.ofInstant(to.toInstant(), ZoneId.systemDefault())
+        );
     }
 }

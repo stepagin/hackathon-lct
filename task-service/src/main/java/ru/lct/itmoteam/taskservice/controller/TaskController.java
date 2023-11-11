@@ -24,7 +24,7 @@ public class TaskController {
         try {
             return ResponseEntity.ok(taskService.getAllUnfinishedTasks());
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Не удалось получить незавершённые задачи.");
+            return ResponseEntity.internalServerError().body("Не удалось получить незавершённые задачи.");
         }
     }
 
@@ -35,7 +35,7 @@ public class TaskController {
         } catch (BadInputDataException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Не удалось запросить задачу.");
+            return ResponseEntity.internalServerError().body("Не удалось запросить задачу.");
         }
     }
 
@@ -44,18 +44,7 @@ public class TaskController {
         try {
             return ResponseEntity.ok(taskService.getAllFinishedTasks());
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Не удалось получить завершённые задачи.");
-        }
-    }
-
-    @GetMapping("/test")
-    public ResponseEntity testing(@RequestParam Long task_id) {
-//        return ResponseEntity.ok(taskService.getHistory(LocalDateTime.of(2023, 7, 31, 0, 0),
-//                LocalDateTime.of(2023, 12, 31, 0, 0)));
-        try {
-            return ResponseEntity.ok(taskService.unassignTask(task_id));
-        } catch (BadInputDataException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.internalServerError().body("Не удалось получить завершённые задачи.");
         }
     }
 
@@ -67,7 +56,7 @@ public class TaskController {
         } catch (BadInputDataException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Не удалось обработать запрос.");
+            return ResponseEntity.internalServerError().body("Не удалось обработать запрос.");
         }
     }
 
@@ -79,7 +68,7 @@ public class TaskController {
         } catch (BadInputDataException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Не удалось назначить задачу.");
+            return ResponseEntity.internalServerError().body("Не удалось назначить задачу.");
         }
     }
 
@@ -90,9 +79,21 @@ public class TaskController {
         } catch (BadInputDataException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Не удалось назначить задачу.");
+            return ResponseEntity.internalServerError().body("Не удалось отвязать задачу.");
         }
     }
 
-    // TODO: taskDone(Long taskId)
+    @PostMapping("/{taskId}/done")
+    public ResponseEntity taskDone(@PathVariable Long taskId) {
+        try {
+            taskService.finishTask(taskId);
+            return ResponseEntity.ok("Успешно.");
+        } catch (BadInputDataException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Не удалось пометить задачу выполненной.");
+        }
+    }
+
+
 }
