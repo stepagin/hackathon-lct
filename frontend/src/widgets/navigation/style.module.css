@@ -1,0 +1,35 @@
+:root {
+    --inactive-link: #555E7C4D;
+    --active-link: #213A8B;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    padding: .625rem 3rem;
+    align-items: center;
+    border-bottom: 1px solid var(--default-gray, #B9BBC2);
+}
+
+.navbar a {
+    text-decoration: none;
+}
+
+.navigation {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem; 
+}
+
+.link {
+    color: var(--inactive-link);
+    font-size: 1.125rem;
+    line-height: 2.5rem;
+
+    border-bottom: 1px solid var(--inactive-link);
+}
+
+.active {
+    color: var(--active-link);
+    border-bottom: 2px solid var(--active-link);
+}
