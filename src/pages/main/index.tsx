@@ -1,12 +1,18 @@
 import React from "react";
-import { Link } from "react-router-dom";
+
+import { useLoginRedirect } from "features/login";
+import HomePage from "pages/manager/home";
 
 const MainPage: React.FC = () => {
-    return (
-        <div>
-            <Link to="/login">Main</Link>
-        </div>
-    );
+    const user = useLoginRedirect();
+    
+    if (user === null) {
+        return null;
+    }
+
+    return user.role === "MANAGER" ? (
+        <HomePage />
+    ) : null;
 };
 
 export default MainPage;

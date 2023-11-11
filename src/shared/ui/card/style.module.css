@@ -1,5 +1,35 @@
+:root {
+    --overlay-tint: #00000022;
+}
+
 .card {
     background: var(--default-white);
-    padding: 30px;
-    border-radius: 10px;
+    padding: 2rem;
+    border-radius: .625rem;
+    position: relative;
+    box-shadow: 0px 0px 50px 0px rgba(0, 0, 0, 0.10);
+}
+
+.card::after {
+    pointer-events: none;
+    opacity: 0;
+    content: "Загрузка...";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: .625rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    background-color: var(--overlay-tint);
+    backdrop-filter: blur(10px);
+    line-height: 100%;
+    transition: opacity 100ms linear;
+}
+
+.loading::after {
+    opacity: 1;
 }

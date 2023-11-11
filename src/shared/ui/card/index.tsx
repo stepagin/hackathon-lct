@@ -5,13 +5,18 @@ import { UiElementProps } from "../props";
 import styles from "./style.module.css";
 
 interface CardProps extends React.PropsWithChildren<UiElementProps> {
-
+    loading?: boolean;
 }
 
-export const Card: React.FC<CardProps> = ({ children, className: classes }) => {
-    classes = classes === undefined ? "" : ` ${classes}`;
-    const className = `${styles.card}${classes}`;
-    return <div className={className}>
-        {children}
-    </div>
-}
+export const Card: React.FC<CardProps> = ({
+    children,
+    className: classes,
+    loading,
+}) => {
+    const loadingClass = loading ? styles.loading : "";
+    const className = `${styles.card} ${loadingClass} ${classes}`.replace(
+        /\s+/g,
+        " "
+    );
+    return <div className={className}>{children}</div>;
+};

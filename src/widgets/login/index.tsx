@@ -1,30 +1,69 @@
-import React from "react";
+import React, { ChangeEvent, FormEvent, useState } from "react";
 
-import { Button, Card, resource } from "shared/ui";
+import { Button, Card, Logo } from "shared/ui";
 
 import styles from "./style.module.css";
+import { InputGroup } from "shared/ui";
+import { useEvent, useStore } from "effector-react";
+import { loginModel } from "features/login";
 
-export const LoginWidget = () => {
+export const LoginWidget: React.FC = () => {
+    const [login, setLogin] = useState("");
+    const [password, setPassword] = useState("");
+
+    const someEmpty = login.trim() === "" || password.trim() === "";
+
+    const pending = useStore(loginModel.loginFx.pending);
+    const error = useStore(loginModel.$error);
+    const loginEvent = useEvent(loginModel.loginFx);
+    const resetError = useEvent(loginModel.resetError);
+
+    const handleLoginChange = (e: ChangeEvent<HTMLInputElement>) => {
+        setLogin(e.target.value);
+        resetError();
+    };
+
+    const handlePasswordChange = (e: ChangeEvent<HTMLInputElement>) => {
+        setPassword(e.target.value);
+        resetError();
+    };
+
+    const handleSubmit = (e: FormEvent) => {
+        e.preventDefault();
+        loginEvent({ login, password });
+    }
+
     return (
-        <Card className={styles.widget}>
-            <form>
-                <img
-                    alt="Логотип Совкомбанка"
-                    src={resource("svg/sovcombank-logo.svg")}
-                />
-                <label htmlFor="#username">Имя</label>
-                <input
-                    id="username"
+        <Card loading={pending} className={styles.widget}>
+            <form onSubmit={handleSubmit}>
+                <Logo />
+
+                <h1 className={styles.title}>Войти в систему</h1>
+
+                <InputGroup
+                    id="login"
                     type="text"
                     placeholder="Введите имя пользователя"
-                />
-                <label htmlFor="#password">Пароль</label>
-                <input
+                    error={error}
+                    value={login}
+                    onChange={handleLoginChange}
+                >
+                    Логин
+                </InputGroup>
+                <InputGroup
                     id="password"
                     type="password"
                     placeholder="Введите пароль"
-                />
-                <Button>Войти в систему</Button>
+                    error={error}
+                    value={password}
+                    onChange={handlePasswordChange}
+                >
+                    Пароль
+                </InputGroup>
+
+                {error && <span className={styles.error}>Неправильный логин или пароль</span>}
+
+                <Button type="submit" disabled={someEmpty || error}>Войти в систему</Button>
             </form>
         </Card>
     );

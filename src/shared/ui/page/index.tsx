@@ -4,7 +4,12 @@ import styles from "./style.module.css";
 
 import { UiElementProps } from "../props";
 
-export const Page: React.FC<React.PropsWithChildren<UiElementProps>> = ({
+interface PageProps extends React.PropsWithChildren<UiElementProps> {
+    header?: React.ReactNode;
+}
+
+export const Page: React.FC<PageProps> = ({
+    header,
     children,
     className: classes,
 }) => {
@@ -15,8 +20,9 @@ export const Page: React.FC<React.PropsWithChildren<UiElementProps>> = ({
     }
 
     return (
-        <div className={className}>
+        <main className={className}>
+            <header>{header}</header>
             <article className={styles.content}>{children}</article>
-        </div>
+        </main>
     );
 };
