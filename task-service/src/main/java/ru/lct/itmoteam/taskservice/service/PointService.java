@@ -73,8 +73,7 @@ public class PointService {
         pointStatistic.setMaterialsDelivered(point.isMaterialsDelivered());
         Optional<Date> maxDate = issuanceRepo.findMaxDateByPointId(point.getId());
         if (maxDate.isPresent()) {
-            // TODO: normal calculating days
-            pointStatistic.setDaysFromLastCardIssuanse((int) Duration.between((Temporal) maxDate.get(), (Temporal) new Date()).toDays());
+            pointStatistic.setDaysFromLastCardIssuanse((int) Duration.between(maxDate.get().toInstant(), new Date().toInstant()).toDays());
         } else
             pointStatistic.setDaysFromLastCardIssuanse(0);
 

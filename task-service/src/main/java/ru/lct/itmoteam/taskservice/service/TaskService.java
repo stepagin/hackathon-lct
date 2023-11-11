@@ -31,7 +31,7 @@ public class TaskService {
 
     public TaskEntity addTask(Task task) throws BadInputDataException {
         if (!taskTypeRepo.existsByName(task.getName())) {
-            throw new BadInputDataException("Не существует типа задачи с таким id");
+            throw new BadInputDataException("Не существует типа задачи с таким названием");
         }
         TaskTypeEntity type = taskTypeRepo.findByName(task.getName());
         PointEntity point;
@@ -46,6 +46,9 @@ public class TaskService {
             point = pointService.getPointByAddress(task.getAddress());
         } else {
             throw new BadInputDataException("Не указана точка задачи.");
+        }
+        if (taskRepo.existsByType_IdAndPoint_Id(type.getId(), point.getId())) {
+            throw new BadInputDataException("Такая задача для данной точки уже существует и не завершена.");
         }
         try {
             TaskEntity taskEntity = new TaskEntity();
@@ -137,6 +140,22 @@ public class TaskService {
                 .toList();
     }
 
+    public List<TaskEntity> getAllTaskEntities() {
+        Iterable<TaskEntity> source = taskRepo.findAll();
+        return StreamSupport.stream(source.spliterator(), false).toList();
+    }
+
+    public List<TaskEntity> getAllUnassignedTaskEntities() {
+        Iterable<TaskEntity> source = taskRepo.findAll();
+        return StreamSupport.stream(source.spliterator(), false)
+                .filter(taskEntity -> taskEntity.getStatus() == TaskDistributionStatus.NOT_DISTRIBUTED)
+                .toList();
+    }
+
+    public List<TaskEntity> getAllUnassignedTaskEntitiesOrdered() {
+        return taskRepo.findByStatusOrderByType_PriorityDescAssignmentDateAsc();
+    }
+
     public List<Task> getHistory(LocalDateTime dateFrom, LocalDateTime dateTo) {
         return taskRepo.findBetweenDate(dateFrom, dateTo).stream()
                 .map(Task::toModel)
@@ -203,4 +222,6 @@ public class TaskService {
                 LocalDateTime.ofInstant(to.toInstant(), ZoneId.systemDefault())
         );
     }
+
+
 }

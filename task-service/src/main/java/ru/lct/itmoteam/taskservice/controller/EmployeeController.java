@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ru.lct.itmoteam.taskservice.exception.BadInputDataException;
 import ru.lct.itmoteam.taskservice.service.EmployeeService;
+import ru.lct.itmoteam.taskservice.service.TaskDistributionService;
 
 @Controller
 @RequestMapping("/employees")
@@ -13,6 +14,8 @@ import ru.lct.itmoteam.taskservice.service.EmployeeService;
 public class EmployeeController {
     @Autowired
     private EmployeeService employeeService;
+    @Autowired
+    private TaskDistributionService taskDistributionService;
 
     @GetMapping
     public ResponseEntity getAllEmployees() {
@@ -43,6 +46,15 @@ public class EmployeeController {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.internalServerError().body("Не удалось обновить.");
+        }
+    }
+
+    @GetMapping("/{id}/tasksfortoday")
+    public ResponseEntity getDistributedTasksForEmployee(@PathVariable Long id) {
+        try {
+            return ResponseEntity.ok(taskDistributionService.getEmployeeTasksForToday(id));
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Произошла ошибка на стороне сервера.");
         }
     }
 }

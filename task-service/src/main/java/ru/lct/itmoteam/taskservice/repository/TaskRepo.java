@@ -16,6 +16,13 @@ import java.util.List;
 
 @Repository
 public interface TaskRepo  extends CrudRepository<TaskEntity, Long> {
+    @Query("select (count(t) > 0) from TaskEntity t where t.type.id = ?1 and t.point.id = ?2 and t.completed = false")
+    boolean existsByType_IdAndPoint_Id(Long typeId, Long pointId);
+
+    @Query("select t from TaskEntity t where t.status = 'NOT_DISTRIBUTED' order by t.type.priority DESC, t.assignmentDate")
+    List<TaskEntity> findByStatusOrderByType_PriorityDescAssignmentDateAsc();
+    @Query("select t from TaskEntity t order by t.type.priority DESC")
+    List<TaskEntity> findByOrderByType_PriorityDesc();
     @Query("""
             select count(t) from TaskEntity t
             where t.employee.id = ?1 and t.type.grade = ?2 and t.completionDatetime between ?3 and ?4""")
