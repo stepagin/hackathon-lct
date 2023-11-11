@@ -16,5 +16,9 @@ public interface IssuanceRepo  extends CrudRepository<IssuanceEntity, Long> {
     @Query("select max(i.issuingDate) from IssuanceEntity i where i.pointEntity.id = ?1")
     Optional<Date> findMaxDateByPointId(Long id);
 
+    @Query("select count(i) from IssuanceEntity i where i.issuingDate >= ?1")
+    long countIssuanceFromDate(Date issuingDate);
+
+
 
 }

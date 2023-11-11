@@ -62,6 +62,10 @@ public class EmployeeService {
         return source.stream().map(Employee::toModel).toList();
     }
 
+    public List<EmployeeEntity> getAllActiveEmployeeEntities() {
+        return employeeRepo.findByIsActiveTrue();
+    }
+
     public void setActiveEmployee(Long employeeId, boolean isActive) throws BadInputDataException {
         if (!existsEmployeeById(employeeId))
             throw new BadInputDataException("Не существует сотрудника с таким id.");
