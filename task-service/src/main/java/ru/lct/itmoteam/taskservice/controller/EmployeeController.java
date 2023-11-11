@@ -1,14 +1,48 @@
 package ru.lct.itmoteam.taskservice.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import ru.lct.itmoteam.taskservice.exception.BadInputDataException;
+import ru.lct.itmoteam.taskservice.service.EmployeeService;
 
 @Controller
 @RequestMapping("/employees")
 @CrossOrigin
 public class EmployeeController {
-    // TODO: /employees
-    // TODO: /employees/all
-    // TODO: /employees?id=EMPLOYEE_ID
+    @Autowired
+    private EmployeeService employeeService;
+
+    @GetMapping
+    public ResponseEntity getAllEmployees() {
+        try {
+            return ResponseEntity.ok(employeeService.getAllEmployees());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Не удалось получить данные работников.");
+        }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity getEmployeeById(@PathVariable Long id) {
+        try {
+            return ResponseEntity.ok(employeeService.getEmployeeById(id));
+        } catch (BadInputDataException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Не удалось получить данные работника.");
+        }
+    }
+
+    @PostMapping("/{employeeId}")
+    public ResponseEntity setActiveEmployee(@PathVariable Long employeeId, @RequestParam boolean setActive) {
+        try {
+            employeeService.setActiveEmployee(employeeId, setActive);
+            return ResponseEntity.ok("Успешно обновлено.");
+        } catch (BadInputDataException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Не удалось обновить.");
+        }
+    }
 }

@@ -16,6 +16,7 @@ public class Employee {
         if (employee == null)
             return null;
         Employee model = new Employee();
+        model.setId(employee.getId());
         model.setSecondName(employee.getPerson().getSecondName());
         model.setFirstName(employee.getPerson().getFirstName());
         model.setMiddleName(employee.getPerson().getMiddleName());

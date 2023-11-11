@@ -34,6 +34,9 @@ public class AuthService {
         if (data.getSecondName() == null || data.getFirstName() == null || data.getMiddleName() == null) {
             throw new BadInputDataException("Неверно введено ФИО.");
         }
+        if (data.getSecondName().equals("") || data.getFirstName().equals("")) {
+            throw new BadInputDataException("Неверно введено ФИО.");
+        }
         // Проходит регистрация 3 раза: человека, аккаунта и работника
 
         if (data.getRole().equals("EMPLOYEE")) {

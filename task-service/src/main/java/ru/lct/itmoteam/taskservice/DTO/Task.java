@@ -15,7 +15,9 @@ public class Task {
     private boolean completed;
     private LocalDateTime completionDate;
     private String status;
-    private Long personId;
+    private Long employeeId;
+    private String address;
+    private Long pointId;
 
     public static Task toModel(TaskEntity taskEntity) {
         Task task = new Task();
@@ -27,8 +29,11 @@ public class Task {
         task.setMinutesToResolve(taskEntity.getType().getMinutesToResolve());
         task.setCompleted(taskEntity.isCompleted());
         task.setCompletionDate(taskEntity.getCompletionDatetime());
-        task.setStatus(task.getStatus());
-        task.setPersonId(taskEntity.getPerson().getId());
+        task.setStatus(taskEntity.getStatus().toString());
+        if (taskEntity.getEmployee() != null)
+            task.setEmployeeId(taskEntity.getEmployee().getId());
+        task.setAddress(taskEntity.getPoint().getAddress());
+        task.setPointId(taskEntity.getPoint().getId());
         return task;
     }
 
@@ -107,11 +112,27 @@ public class Task {
         this.status = status;
     }
 
-    public Long getPersonId() {
-        return personId;
+    public Long getEmployeeId() {
+        return employeeId;
     }
 
-    public void setPersonId(Long personId) {
-        this.personId = personId;
+    public void setEmployeeId(Long employeeId) {
+        this.employeeId = employeeId;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public Long getPointId() {
+        return pointId;
+    }
+
+    public void setPointId(Long pointId) {
+        this.pointId = pointId;
     }
 }

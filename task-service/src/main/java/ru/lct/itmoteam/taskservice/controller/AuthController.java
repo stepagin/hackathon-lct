@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ru.lct.itmoteam.taskservice.DTO.AccountAndPersonData;
+import ru.lct.itmoteam.taskservice.DTO.AuthData;
 import ru.lct.itmoteam.taskservice.entity.AccountEntity;
 import ru.lct.itmoteam.taskservice.exception.BadInputDataException;
 import ru.lct.itmoteam.taskservice.exception.EntityDoesNotExistException;
@@ -25,10 +26,9 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity register(@RequestBody AccountAndPersonData data) {
         try {
-            authService.register(data);
-            return ResponseEntity.ok("Пользователь успешно зарегистрирован");
+            return ResponseEntity.ok(new AuthData(true, authService.register(data).getPerson()));
         } catch (BadInputDataException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(new AuthData(false, null));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Произошла внутренняя ошибка сервиса.");
         }
@@ -37,12 +37,11 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody AccountEntity user) {
         try {
-            authService.login(user);
-            return ResponseEntity.ok(true);
+            return ResponseEntity.ok(new AuthData(true, authService.login(user).getPerson()));
         } catch (PasswordIncorrectException | EntityDoesNotExistException e) {
-            return ResponseEntity.ok("Введён неверный логин или пароль.");
+            return ResponseEntity.status(403).body(new AuthData(false, null));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Произошла ошибка во время входа в аккаунт.");
+            return ResponseEntity.internalServerError().body("Произошла ошибка во время входа в аккаунт.");
         }
     }
 }

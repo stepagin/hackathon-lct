@@ -5,7 +5,6 @@ import org.springframework.stereotype.Service;
 import ru.lct.itmoteam.taskservice.DTO.Employee;
 import ru.lct.itmoteam.taskservice.entity.EmployeeEntity;
 import ru.lct.itmoteam.taskservice.exception.BadInputDataException;
-import ru.lct.itmoteam.taskservice.exception.EntityNotFoundException;
 import ru.lct.itmoteam.taskservice.repository.EmployeeRepo;
 
 import java.util.List;
@@ -38,13 +37,38 @@ public class EmployeeService {
         return StreamSupport.stream(source.spliterator(), false).map(Employee::toModel).toList();
     }
 
-    public Employee getEmployeeById(Long id) throws EntityNotFoundException {
+    public Employee getEmployeeById(Long id) throws BadInputDataException {
         Optional<EmployeeEntity> employee = employeeRepo.findById(id);
         if (employee.isPresent()) {
             return Employee.toModel(employee.get());
         }
-        throw new EntityNotFoundException("Пользователь с таким id не найден");
+        throw new BadInputDataException("Пользователь с таким id не найден");
     }
 
-    // TODO: List<Employee> getAllActiveEmployees()
+    public EmployeeEntity getEmployeeEntityById(Long id) throws BadInputDataException {
+        Optional<EmployeeEntity> employee = employeeRepo.findById(id);
+        if (employee.isPresent()) {
+            return employee.get();
+        }
+        throw new BadInputDataException("Пользователь с таким id не найден");
+    }
+
+    public boolean existsEmployeeById(Long id) {
+        return employeeRepo.existsById(id);
+    }
+
+    public List<Employee> getAllActiveEmployees() {
+        List<EmployeeEntity> source = employeeRepo.findByIsActiveTrue();
+        return source.stream().map(Employee::toModel).toList();
+    }
+
+    public void setActiveEmployee(Long employeeId, boolean isActive) throws BadInputDataException {
+        if (!existsEmployeeById(employeeId))
+            throw new BadInputDataException("Не существует сотрудника с таким id.");
+        try {
+            employeeRepo.updateIsActiveById(isActive, employeeId);
+        } catch (Exception e) {
+            throw new BadInputDataException("При изменении сотрудника что-то пошло не так.");
+        }
+    }
 }

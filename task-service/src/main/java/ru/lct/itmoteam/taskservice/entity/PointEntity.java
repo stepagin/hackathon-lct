@@ -1,6 +1,7 @@
 package ru.lct.itmoteam.taskservice.entity;
 
 import jakarta.persistence.*;
+import ru.lct.itmoteam.taskservice.DTO.Point;
 
 import java.util.Date;
 
@@ -13,12 +14,20 @@ public class PointEntity {
     private Long id;
     @Column(name = "address", nullable = false)
     private String address;
-    @Column(name = "join_date", nullable = false)
+    @Column(name = "join_date", nullable = false, columnDefinition = "date")
     private Date joinDate;
     @Column(name = "materials_delivered", nullable = false)
     private boolean materialsDelivered;
 
     public PointEntity() {
+    }
+
+    public static PointEntity toEntity(Point point) {
+        PointEntity entity = new PointEntity();
+        entity.setAddress(point.getAddress());
+        entity.setJoinDate(point.getJoinDate());
+        entity.setMaterialsDelivered(point.isMaterialsDelivered());
+        return entity;
     }
 
     public Long getId() {

@@ -11,7 +11,7 @@ public class IssuanceEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
-    @Column(name = "issuing_date", nullable = false)
+    @Column(name = "issuing_date", nullable = false, columnDefinition = "date")
     private Date issuingDate;
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "point_id")

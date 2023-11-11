@@ -22,9 +22,9 @@ public class TaskEntity {
     @Column(name = "status", nullable = false)
     private TaskDistributionStatus status;
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinColumn(name = "person_id")
-    private PersonEntity person;
-    @Column(name = "assignment_date")
+    @JoinColumn(name = "employee_id")
+    private EmployeeEntity employee;
+    @Column(name = "assignment_date", columnDefinition = "date")
     private Date assignmentDate;
     @Column(name = "completed")
     private boolean completed;
@@ -66,12 +66,12 @@ public class TaskEntity {
         this.status = status;
     }
 
-    public PersonEntity getPerson() {
-        return person;
+    public EmployeeEntity getEmployee() {
+        return employee;
     }
 
-    public void setPerson(PersonEntity person) {
-        this.person = person;
+    public void setEmployee(EmployeeEntity employee) {
+        this.employee = employee;
     }
 
     public Date getAssignmentDate() {

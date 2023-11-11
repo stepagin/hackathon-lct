@@ -11,7 +11,7 @@ public class ApplicationEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
-    @Column(name = "application_date", nullable = false)
+    @Column(name = "application_date", nullable = false, columnDefinition = "date")
     private Date applicationDate;
     @Column(name = "completed", nullable = false)
     private boolean completed;
