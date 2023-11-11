@@ -24,12 +24,13 @@ public class YandexMapService {
     LocationService locationService;
     private static final String API_KEY = "";
     private static final String GEOCODE_ENDPOINT = "https://geocode-maps.yandex.ru/1.x";
-    private static final String ROUTING_ENDPOINT = "https://api.routing.yandex.net/v2/route";
+
     public String getJsonFromUrl(String url) {
         RestTemplate restTemplate = new RestTemplate();
 
         return restTemplate.getForObject(url, String.class);
     }
+
     private static List<String> getAddressesValuesFromJSON(String xml, String type){
         List<String> textValues = new ArrayList<>();
         try {
@@ -47,6 +48,7 @@ public class YandexMapService {
         }
         return textValues;
     }
+
     public List<String> getAddressesByInput(String input) {
         // TODO: по входным значениям добывает не более 5 адресов, которые наиболее похожи на введённый
         String geocode_uri = UriComponentsBuilder.fromHttpUrl(GEOCODE_ENDPOINT)
@@ -63,48 +65,61 @@ public class YandexMapService {
     public String getLinkOfRouteByTwoAddresses(String address1, String address2) {
         // TODO: по двум существующим адресам возвращает ссылку на маршрут между ними в Яндекс картах
         //  гарантируется, что адреса существуют на карте мира
-//        String geocode_uri1 = getAddressesValuesFromJSON(getJsonFromUrl(UriComponentsBuilder.fromHttpUrl(GEOCODE_ENDPOINT)
-//                .queryParam("apikey", API_KEY)
-//                .queryParam("geocode", address1.replace(" ", "+"))
-//                .queryParam("region", "russia")
-//                .queryParam("bbox", "19.642601,41.185207~190.10042,81.25044")
-//                .queryParam("results", "1")
-//                .build().toUriString()), "pos").get(0).replace(" ", "+");
-//        String geocode_uri2 = getAddressesValuesFromJSON(getJsonFromUrl(UriComponentsBuilder.fromHttpUrl(GEOCODE_ENDPOINT)
-//                .queryParam("apikey", API_KEY)
-//                .queryParam("geocode", address2.replace(" ", ","))
-//                .queryParam("region", "russia")
-//                .queryParam("bbox", "19.642601,41.185207~190.10042,81.25044")
-//                .queryParam("results", "1")
-//                .build().toUriString()), "pos").get(0).replace(" ", ",");
-//        String route_uri = UriComponentsBuilder.fromHttpUrl(ROUTING_ENDPOINT)
-//                .queryParam("apikey", API_KEY)
-//                .queryParam("waypoints", geocode_uri1+"|"+geocode_uri2)
-//                .build().toUriString();
-        return "https://yandex.ru/maps/35/krasnodar/?ll=39.026047%2C45.031821&mode=routes&rtext=45.012835%2C39.071711~45.044960%2C38.977047";
-    }
-
-    public String getLinkOfRouteByOneAddress(String address) {
-        // TODO: по адресу возвращает маршрут в Яндекс картах от местоположения до адреса
-        //  гарантируется, что адрес существует на карте мира
-        return "https://yandex.ru/maps/35/krasnodar/?ll=39.026047%2C45.031821&mode=routes&rtext=45.012835%2C39.071711~45.044960%2C38.977047";
-    }
-
-    public HashMap<String, Integer> getMeanTimeBetweenTwoAddresses(String address1, String address2) {
         String geocode1 = getAddressesValuesFromJSON(getJsonFromUrl(UriComponentsBuilder.fromHttpUrl(GEOCODE_ENDPOINT)
                 .queryParam("apikey", API_KEY)
                 .queryParam("geocode", address1.replace(" ", "+"))
                 .queryParam("region", "russia")
                 .queryParam("bbox", "19.642601,41.185207~190.10042,81.25044")
                 .queryParam("results", "1")
-                .build().toUriString()), "pos").get(0).replace(" ", "+");
+                .build().toUriString()), "pos").get(0).replace(" ", ",");
+        String[] parts = geocode1.split(",");
+        geocode1 = parts[1] + "," + parts[0];
         String geocode2 = getAddressesValuesFromJSON(getJsonFromUrl(UriComponentsBuilder.fromHttpUrl(GEOCODE_ENDPOINT)
                 .queryParam("apikey", API_KEY)
-                .queryParam("geocode", address2.replace(" ", ","))
+                .queryParam("geocode", address2.replace(" ", "+"))
                 .queryParam("region", "russia")
                 .queryParam("bbox", "19.642601,41.185207~190.10042,81.25044")
                 .queryParam("results", "1")
                 .build().toUriString()), "pos").get(0).replace(" ", ",");
+        parts = geocode2.split(",");
+        geocode2 = parts[1] + "," + parts[0];
+        return "https://yandex.ru/maps/?rtext=" + geocode1 + "~" + geocode2 + "&rtt=auto";
+    }
+
+    public String getLinkOfRouteByOneAddress(String address) {
+        // TODO: по адресу возвращает маршрут в Яндекс картах от местоположения до адреса
+        //  гарантируется, что адрес существует на карте мира
+        String geocode = getAddressesValuesFromJSON(getJsonFromUrl(UriComponentsBuilder.fromHttpUrl(GEOCODE_ENDPOINT)
+                .queryParam("apikey", API_KEY)
+                .queryParam("geocode", address.replace(" ", "+"))
+                .queryParam("region", "russia")
+                .queryParam("bbox", "19.642601,41.185207~190.10042,81.25044")
+                .queryParam("results", "1")
+                .build().toUriString()), "pos").get(0).replace(" ", ",");
+        String[] parts = geocode.split(",");
+        geocode = parts[1] + "," + parts[0];
+        return "https://yandex.ru/maps/?rtext=" + geocode + "&rtt=auto";
+    }
+
+    public int getMeanTimeBetweenTwoAddresses(String address1, String address2) {
+        String geocode1 = getAddressesValuesFromJSON(getJsonFromUrl(UriComponentsBuilder.fromHttpUrl(GEOCODE_ENDPOINT)
+                .queryParam("apikey", API_KEY)
+                .queryParam("geocode", address1.replace(" ", "+"))
+                .queryParam("region", "russia")
+                .queryParam("bbox", "19.642601,41.185207~190.10042,81.25044")
+                .queryParam("results", "1")
+                .build().toUriString()), "pos").get(0).replace(" ", ",");
+        String[] parts = geocode1.split(",");
+        geocode1 = parts[1] + "," + parts[0];
+        String geocode2 = getAddressesValuesFromJSON(getJsonFromUrl(UriComponentsBuilder.fromHttpUrl(GEOCODE_ENDPOINT)
+                .queryParam("apikey", API_KEY)
+                .queryParam("geocode", address2.replace(" ", "+"))
+                .queryParam("region", "russia")
+                .queryParam("bbox", "19.642601,41.185207~190.10042,81.25044")
+                .queryParam("results", "1")
+                .build().toUriString()), "pos").get(0).replace(" ", ",");
+        parts = geocode2.split(",");
+        geocode2 = parts[1] + "," + parts[0];
         String response = getJsonFromUrl(UriComponentsBuilder.fromHttpUrl("https://graphhopper.com/api/1/matrix")
                         .queryParam("key", "530a162f-ce50-4a51-91c0-ab6408e1294f")
                         .queryParam("point", geocode1)
@@ -119,13 +134,11 @@ public class YandexMapService {
             JSONArray innerArray = timesArray.getJSONArray(i);
             for (int j = 0; j < innerArray.length(); j++) {
                 if (i != j) {
-                    int timeInMinutes = innerArray.getInt(j) / 60;
-                    String key = address1 + " -> " + address2;
-                    resultMap.put(key, timeInMinutes);
+                    return innerArray.getInt(j) / 60;
                 }
             }
         }
-        return resultMap;
+        return 0;
     }
 
     public int getTimeBetweenTwoAddressesWithDaytime(String address1, String address2, int daytime) {
@@ -140,8 +153,23 @@ public class YandexMapService {
         // TODO: возвращает ссылку на сложный маршрут по точкам, сохраняя порядок
         //  на входе указывается список адресов точек
         //  гарантируется, что точки существуют на карте мира
-        return "https://yandex.ru/maps/35/krasnodar/?ll=39.008926%2C45.037492&mode=routes&rtext=45.053773%2C38.941986~45.044960%2C38.977047~45.012835%2C39.071711&rtt=auto&ruri=ymapsbm";
-    }
+        List<String> geocodedAddresses = new ArrayList<>();
 
+        for (String address : points) {
+            String geocode = getAddressesValuesFromJSON(getJsonFromUrl(UriComponentsBuilder.fromHttpUrl(GEOCODE_ENDPOINT)
+                    .queryParam("apikey", API_KEY)
+                    .queryParam("geocode", address.replace(" ", "+"))
+                    .queryParam("region", "russia")
+                    .queryParam("results", "1")
+                    .build().toUriString()), "pos").get(0).replace(" ", ",");
+            String[] parts = geocode.split(",");
+            geocode = parts[1] + "," + parts[0];
+            geocodedAddresses.add(geocode);
+        }
+        String link = "https://yandex.ru/maps/?rtext=";
+        String coordinatesString = String.join("~", geocodedAddresses);
+        link += coordinatesString + "&rtt=auto";
+        return link;
+    }
 
 }
