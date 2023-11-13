@@ -11,7 +11,7 @@ public class DatedTaskForEmployeeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
-    @Column(name = "doing_date", nullable = false)
+    @Column(name = "doing_date", nullable = false, columnDefinition = "date")
     private Date doingDate;
     @Column(name = "task_id", nullable = false)
     private Long TaskId;

@@ -12,7 +12,7 @@ public class PointEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
-    @Column(name = "address", nullable = false)
+    @Column(name = "address", nullable = false, unique = true)
     private String address;
     @Column(name = "join_date", nullable = false, columnDefinition = "date")
     private Date joinDate;

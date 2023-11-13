@@ -1,8 +1,8 @@
 package ru.lct.itmoteam.taskservice.repository;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.lct.itmoteam.taskservice.entity.EmployeeEntity;
@@ -15,7 +15,7 @@ import java.util.Date;
 import java.util.List;
 
 @Repository
-public interface TaskRepo  extends CrudRepository<TaskEntity, Long> {
+public interface TaskRepo  extends JpaRepository<TaskEntity, Long> {
     @Query("select (count(t) > 0) from TaskEntity t where t.type.id = ?1 and t.point.id = ?2 and t.completed = false")
     boolean existsByType_IdAndPoint_Id(Long typeId, Long pointId);
 
