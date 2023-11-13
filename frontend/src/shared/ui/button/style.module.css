@@ -6,7 +6,7 @@
 .button {
     line-height: 3rem;
     padding: 0 1.5rem;
-    border-radius: .25rem;
+    border-radius: .4rem;
     font-size: 1.125rem;
 }
 
@@ -25,4 +25,16 @@
 
 .primary:disabled {
     background-color: var(--default-gray);
+}
+
+.secondary {
+    background-color: #fff;
+    color: var(--button-primary);
+    border: solid var(--button-primary);
+    transition: all .3s ease;
+}
+
+.secondary:active {
+    background-color: var(--button-primary);
+    color: #fff;
 }

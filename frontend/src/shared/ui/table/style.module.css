@@ -1,7 +1,21 @@
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
 .table th, td {
     padding: .75rem;
 }
 
-.table .thead {
-    border-bottom: 1px solid #444;
+table th + th {
+    border-bottom: 2px solid #c4c4c4;
+    border-left: 2px solid #c4c4c4;
+}
+
+table th:first-child {
+    border-bottom: 2px solid #c4c4c4;
+}
+
+.table td + td { 
+    border-left: 2px solid #c4c4c4; 
 }

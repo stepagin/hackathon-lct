@@ -6,7 +6,6 @@ import styles from "./style.module.css";
 import { InputGroup } from "shared/ui";
 import { useEvent, useStore } from "effector-react";
 import { loginModel } from "features/login";
-import { Link } from "react-router-dom";
 
 export const LoginWidget: React.FC = () => {
     const [login, setLogin] = useState("");
@@ -63,9 +62,8 @@ export const LoginWidget: React.FC = () => {
                 </InputGroup>
 
                 {error && <span className={styles.error}>Неправильный логин или пароль</span>}
-                <Link to="/">
-                    <Button type="submit" disabled={someEmpty || error}>Войти в систему</Button>
-                </Link>
+                
+                <Button type="submit" disabled={someEmpty || error}>Войти в систему</Button>
             </form>
         </Card>
     );

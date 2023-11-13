@@ -7,3 +7,7 @@
     display: flex;
     width: 100%;
 }
+
+.makeReportBtn {
+    margin-bottom: 20px;
+}

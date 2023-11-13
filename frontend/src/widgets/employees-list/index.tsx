@@ -2,7 +2,9 @@ import { useEvent, useStore } from "effector-react";
 import { tasksModel } from "features/tasks";
 import React, { useEffect } from "react";
 
-import { Card } from "shared/ui";
+import styles from "./style.module.css";
+
+import { Button, Card } from "shared/ui";
 import { ModelTable } from "shared/ui/table";
 
 export const EmpoyeesListWidget: React.FC = () => {
@@ -35,7 +37,8 @@ export const EmpoyeesListWidget: React.FC = () => {
 
     return (
         <Card loading={pendingPage || pendingTasks}>
-            <h1>Список сотрудников</h1>
+            <h1 className={styles.title}>Список сотрудников</h1>
+            <Button color="secondary">Посмотреть всех</Button>
             <ModelTable
                 // data={page}
                 data={testData}

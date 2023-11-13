@@ -2,7 +2,7 @@ import { useEvent, useStore } from "effector-react";
 import { tasksModel } from "features/tasks";
 import React, { useEffect } from "react";
 
-import { Card } from "shared/ui";
+import { Button, Card } from "shared/ui";
 import { ModelTable } from "shared/ui/table";
 
 import styles from "./style.module.css";
@@ -37,7 +37,8 @@ export const TodayTasksWidget: React.FC = () => {
 
     return (
         <Card className={styles.todayWidget} loading={pendingPage || pendingTasks}>
-            <h1>Задачи на сегодня</h1>
+            <h1 className={styles.title}>Задачи на сегодня</h1>
+            <Button color="secondary">Добавить задачу</Button>
             <ModelTable
                 // data={page}
                 data={testData}

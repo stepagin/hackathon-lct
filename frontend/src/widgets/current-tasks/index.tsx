@@ -2,7 +2,7 @@ import { useEvent, useStore } from "effector-react";
 import { tasksModel } from "features/tasks";
 import React, { useEffect } from "react";
 
-import { Card } from "shared/ui";
+import { Button, Card } from "shared/ui";
 import { ModelTable } from "shared/ui/table";
 
 import styles from "./style.module.css"
